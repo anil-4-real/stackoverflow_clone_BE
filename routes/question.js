@@ -12,7 +12,7 @@ router.get("/all", async (req, res, next) => {
     res.json({
       statusCode: 200,
       message: "displayed all questions",
-      data: document,
+      allData: document,
     });
   } catch (error) {
     console.log(error);
@@ -25,7 +25,7 @@ router.get("/all", async (req, res, next) => {
 });
 
 //get single question by id
-router.get("/all/:id", async (req, res, next) => {
+router.get("/all/single/:id", async (req, res, next) => {
   const client = await MongoClient.connect(dbUrl);
   try {
     const db = await client.db("StackOverflow");
@@ -36,7 +36,39 @@ router.get("/all/:id", async (req, res, next) => {
     res.json({
       statusCode: 200,
       message: "displayed the question",
-      data: document,
+      questionData: document,
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      message: "Internal server error",
+    });
+  } finally {
+    client.close();
+  }
+});
+
+//put to a single question
+router.put("/all/:id", async (req, res, next) => {
+  const client = await MongoClient.connect(dbUrl);
+  try {
+    const db = await client.db("StackOverflow");
+    let document = await db.collection("Questions").findOneAndUpdate(
+      {
+        _id: new mongodb.ObjectId(req.params.id),
+      },
+      {
+        $set: {
+          views: req.body.views,
+          votes: req.body.votes,
+        },
+      },
+      {}
+    );
+    console.log(document);
+    res.json({
+      statusCode: 200,
+      message: "updated the question, updated views and votes",
     });
   } catch (error) {
     console.log(error);
