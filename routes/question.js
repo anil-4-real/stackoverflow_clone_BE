@@ -12,7 +12,7 @@ router.get("/all", async (req, res, next) => {
     res.json({
       statusCode: 200,
       message: "displayed all questions",
-      allData: document,
+      data: document,
     });
   } catch (error) {
     console.log(error);
@@ -36,7 +36,7 @@ router.get("/all/single/:id", async (req, res, next) => {
     res.json({
       statusCode: 200,
       message: "displayed the question",
-      questionData: document,
+      data: document,
     });
   } catch (error) {
     console.log(error);
